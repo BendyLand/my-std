@@ -1,6 +1,6 @@
 # My
 
-Custom implementations of various C++ STL features.
+Custom wrappers over various C++ STL features.
 
 ## About
 
