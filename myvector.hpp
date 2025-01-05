@@ -15,18 +15,13 @@ namespace my
     public:
         // Constructor, Copy/Move Constructors, Destructor
         vector() : data(nullptr) {}
-        vector(const vector<T>& vec)
-        {
-            this->data.assign(vec.begin(), vec.end());
-        }
+        vector(const vector<T>& vec) : data(vec.begin(), vec.end()) {}
         vector(vector<T>&& vec) noexcept : data(std::move(vec.data)) {}
-        vector(const std::initializer_list<T>& elements)
-        {
-            this->data.assign(elements.begin(), elements.end());
-        }
         vector(const std::vector<T>& elements) : data(elements.data()) {}
+        vector(const std::initializer_list<T>& elements) : data(elements.begin(), elements.end()) {}
 
         // Operators
+        inline operator std::vector<T>() const { return this->data; }
         inline vector& operator=(const vector<T>& vec)
         {
             if (this != &vec) {
