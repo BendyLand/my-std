@@ -1,3 +1,5 @@
+// This file must be header only due to the template usage.
+
 #pragma once
 
 #include <string>
