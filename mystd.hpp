@@ -66,6 +66,28 @@ namespace my
             os << other.data;
             return os;
         }
+        inline char& operator[](int index)
+        {
+            if (index >= 0) {
+                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
+                return data[index];
+            }
+            do {
+                index = data.size() + index;
+            } while (index < 0);
+            return data[index];
+        }
+        inline const char& operator[](int index) const
+        {
+            if (index >= 0) {
+                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
+                return data[index];
+            }
+            do {
+                index = data.size() + index;
+            } while (index < 0);
+            return data[index];
+        }
 
         // Methods
         inline const std::string str() const { return this->data; }
@@ -130,28 +152,6 @@ namespace my
         // Forward std::string methods
         inline size_t size() const { return data.size(); }
         inline bool empty() const { return data.empty(); }
-        inline char& operator[](int index)
-        {
-            if (index >= 0) {
-                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
-                return data[index];
-            }
-            do {
-                index = data.size() + index;
-            } while (index < 0);
-            return data[index];
-        }
-        inline const char& operator[](int index) const
-        {
-            if (index >= 0) {
-                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
-                return data[index];
-            }
-            do {
-                index = data.size() + index;
-            } while (index < 0);
-            return data[index];
-        }
     };
 };
 

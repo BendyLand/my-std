@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <exception>
 
 namespace my
 {
@@ -21,40 +22,70 @@ namespace my
 
         // Operators
         inline operator std::string() const { return this->data; }
-        inline string& operator+=(const string& other) 
+        inline string& operator=(const string& other)
+        {
+            data = other.data;
+            return *this;
+        }
+        inline string& operator=(string&& other)
+        {
+            data = std::move(other.data);
+            return *this;
+        }
+        inline string& operator+=(const string& other)
         {
             data += other.data;
             return *this;
         }
+        inline string& operator<<(const string& other)
+        {
+            data += other.data;
+            return *this;
+        }
+        inline friend std::ostream& operator<<(std::ostream& os, const string& other)
+        {
+            os << other.data;
+            return os;
+        }
+        inline char& operator[](int index)
+        {
+            if (index >= 0) {
+                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
+                return data[index];
+            }
+            do {
+                index = data.size() + index;
+            } while (index < 0);
+            return data[index];
+        }
+        inline const char& operator[](int index) const
+        {
+            if (index >= 0) {
+                if (index >= data.size()) throw std::out_of_range("Index out of bounds");
+                return data[index];
+            }
+            do {
+                index = data.size() + index;
+            } while (index < 0);
+            return data[index];
+        }
 
         // Methods
-        const std::string str() const; 
         std::string str(); 
+        const std::string str() const; 
         bool contains(const std::string& substr) const;
-        string trim() const; 
+        string ltrim() const;
+        string rtrim() const;
+        string trim() const;
         string to_upper() const;
         string to_lower() const;
+        string to_upper(size_t from) const;
+        string to_lower(size_t from) const;
+        string to_upper(size_t from, size_t to) const;
+        string to_lower(size_t from, size_t to) const;
 
         // Forward std::string methods
         size_t size() const; 
         bool empty() const; 
-        inline char& operator[](size_t index) { return data[index]; }
-        inline const char& operator[](size_t index) const { return data[index]; }
-        inline char& operator[](int index) 
-        { 
-            if (index >= 0) return data[index]; 
-            do {
-                index = data.size() + index;
-            } while (index < 0);
-            return data[index];
-        }
-        inline const char& operator[](int index) const 
-        { 
-            if (index >= 0) return data[index]; 
-            do {
-                index = data.size() + index;
-            } while (index < 0);
-            return data[index];
-        }
     };
 };

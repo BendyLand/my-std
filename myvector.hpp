@@ -1,15 +1,10 @@
-#pragma once // This file must be header only due to the template usage.
-
-#include <string>
-#include <exception>
-#include <vector>
-
 namespace my
 {
     template <typename T>
     class vector
     {
     private:
+        // Fields
         std::vector<T> data;
 
     public:
@@ -17,7 +12,7 @@ namespace my
         vector() : data() {}
         vector(const vector<T>& vec) : data(vec.begin(), vec.end()) {}
         vector(vector<T>&& vec) noexcept : data(std::move(vec.data)) {}
-        vector(const std::vector<T>& elements) : data(elements.data()) {}
+        vector(const std::vector<T>& elements) : data(elements.begin(), elements.end()) {}
         vector(const std::initializer_list<T>& elements) : data(elements.begin(), elements.end()) {}
 
         // Operators
@@ -89,7 +84,13 @@ namespace my
         {
             return this->data.capacity();
         }
+        inline auto begin() -> decltype(data.begin()) { return data.begin(); }
+        inline auto end() -> decltype(data.end()) { return data.end(); }
         inline auto begin() const -> decltype(data.begin()) { return data.begin(); }
         inline auto end() const -> decltype(data.end()) { return data.end(); }
+        inline auto cbegin() const -> decltype(data.cbegin()) { return data.cbegin(); }
+        inline auto cend() const -> decltype(data.cend()) { return data.cend(); }
+        inline auto rbegin() const -> decltype(data.rbegin()) { return data.rbegin(); }
+        inline auto rend() const -> decltype(data.rend()) { return data.rend(); }
     };
 }
