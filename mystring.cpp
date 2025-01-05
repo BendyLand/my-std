@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string.hpp"
+#include "mystring.hpp"
 
 namespace my
 {

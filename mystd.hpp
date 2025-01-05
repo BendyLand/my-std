@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
 #include <exception>
-#include <memory>
+#include <string>
 #include <vector>
 
 namespace my
@@ -147,6 +146,7 @@ namespace my
         vector(const std::vector<T>& elements) : data(elements.data()) {}
 
         // Operators
+        inline operator std::vector<T>() const { return this->data; }
         inline vector& operator=(const vector<T>& vec)
         {
             if (this != &vec) {
