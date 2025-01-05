@@ -9,6 +9,4 @@ int main()
     my::vector<int> test = vec;
     std::vector<int> test2 = vec;
     int res = test.pop();
-    cout << res << endl;
-    cout << test2[1] << endl;
 }

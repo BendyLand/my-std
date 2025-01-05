@@ -41,10 +41,30 @@ namespace my
 
         // Operators
         inline operator std::string() const { return this->data; }
+        inline string& operator=(const string& other)
+        {
+            data = other.data;
+            return *this;
+        }
+        inline string& operator=(string&& other)
+        {
+            data = std::move(other.data);
+            return *this;
+        }
         inline string& operator+=(const string& other)
         {
             data += other.data;
             return *this;
+        }
+        inline string& operator<<(const string& other)
+        {
+            data += other.data;
+            return *this;
+        }
+        inline friend std::ostream& operator<<(std::ostream& os, const string& other)
+        {
+            os << other.data;
+            return os;
         }
 
         // Methods
@@ -54,13 +74,22 @@ namespace my
         {
             return this->data.find(substr) != std::string::npos;
         }
+        inline string ltrim() const
+        {
+            size_t start = data.find_first_not_of(" \t\n\r");
+            return (start == std::string::npos) ? "" : data.substr(start);
+        }
+        inline string rtrim() const
+        {
+            size_t end = data.find_last_not_of(" \t\n\r");
+            return (end == std::string::npos) ? "" : data.substr(0, end + 1);
+        }
         inline string trim() const
         {
             size_t start = data.find_first_not_of(" \t\n\r");
-            size_t end = data.find_last_not_of(" \t\n\r");
+            size_t end = data.find_last_not_of(" \t\r\n");
             return (start == std::string::npos) ? "" : data.substr(start, end - start + 1);
         }
-        //todo: make overloads that accept 'from' and/or 'to' for specific ranges to be changed
         inline string to_upper() const
         {
             string result = data;
@@ -71,6 +100,30 @@ namespace my
         {
             string result = data;
             std::transform(result.data.begin(), result.data.end(), result.data.begin(), ::tolower);
+            return result;
+        }
+        inline string to_upper(size_t from) const
+        {
+            string result = data;
+            std::transform(result.data.begin()+from, result.data.end(), result.data.begin()+from, ::toupper);
+            return result;
+        }
+        inline string to_lower(size_t from) const
+        {
+            string result = data;
+            std::transform(result.data.begin()+from, result.data.end(), result.data.begin()+from, ::tolower);
+            return result;
+        }
+        inline string to_upper(size_t from, size_t to) const
+        {
+            string result = data;
+            std::transform(result.data.begin()+from, result.data.begin()+to, result.data.begin()+from, ::toupper);
+            return result;
+        }
+        inline string to_lower(size_t from, size_t to) const
+        {
+            string result = data;
+            std::transform(result.data.begin()+from, result.data.begin()+to, result.data.begin()+from, ::tolower);
             return result;
         }
 
@@ -137,7 +190,7 @@ namespace my
         vector() : data() {}
         vector(const vector<T>& vec) : data(vec.begin(), vec.end()) {}
         vector(vector<T>&& vec) noexcept : data(std::move(vec.data)) {}
-        vector(const std::vector<T>& elements) : data(elements.data()) {}
+        vector(const std::vector<T>& elements) : data(elements.begin(), elements.end()) {}
         vector(const std::initializer_list<T>& elements) : data(elements.begin(), elements.end()) {}
 
         // Operators
@@ -209,7 +262,13 @@ namespace my
         {
             return this->data.capacity();
         }
+        inline auto begin() -> decltype(data.begin()) { return data.begin(); }
+        inline auto end() -> decltype(data.end()) { return data.end(); }
         inline auto begin() const -> decltype(data.begin()) { return data.begin(); }
         inline auto end() const -> decltype(data.end()) { return data.end(); }
+        inline auto cbegin() const -> decltype(data.cbegin()) { return data.cbegin(); }
+        inline auto cend() const -> decltype(data.cend()) { return data.cend(); }
+        inline auto rbegin() const -> decltype(data.rbegin()) { return data.rbegin(); }
+        inline auto rend() const -> decltype(data.rend()) { return data.rend(); }
     };
 }
