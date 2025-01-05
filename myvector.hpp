@@ -85,6 +85,10 @@ namespace my
         {
             return this->data.size();
         }
+        inline size_t capacity() const
+        {
+            return this->data.capacity();
+        }
         inline auto begin() const -> decltype(data.begin()) { return data.begin(); }
         inline auto end() const -> decltype(data.end()) { return data.end(); }
     };
