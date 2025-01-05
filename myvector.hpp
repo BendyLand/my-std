@@ -14,7 +14,7 @@ namespace my
 
     public:
         // Constructor, Copy/Move Constructors, Destructor
-        vector() : data(nullptr) {}
+        vector() : data() {}
         vector(const vector<T>& vec) : data(vec.begin(), vec.end()) {}
         vector(vector<T>&& vec) noexcept : data(std::move(vec.data)) {}
         vector(const std::vector<T>& elements) : data(elements.data()) {}
