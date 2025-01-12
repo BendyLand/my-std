@@ -1,7 +1,9 @@
 #pragma once
 
 #include <exception>
+#include <iostream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace my
@@ -18,6 +20,7 @@ namespace my
     //todo: eventually replace std::exceptions with my own
     class exception
     {
+    public:
         enum class kind
         {
             RUNTIME, 
@@ -154,6 +157,19 @@ namespace my
             std::transform(result.m_data.begin()+from, result.m_data.begin()+to, result.m_data.begin()+from, ::tolower);
             return result;
         }
+        inline std::vector<string> split(string delim) const 
+        {
+            std::string copy = this->m_data;
+            std::vector<string> result;
+            my::string temp; 
+            while (copy.find(delim.str()) != std::string::npos) {
+                temp = copy.substr(0, copy.find(delim.str()));
+                result.emplace_back(temp);
+                copy.erase(copy.begin(), copy.begin()+(copy.find(delim.str())+1));
+            }
+            if (copy.size() > 0) result.emplace_back(copy);
+            return result;
+        }
 
         // Forward std::string methods
         inline size_t size() const { return m_data.size(); }
@@ -193,7 +209,7 @@ namespace my
         // Constructor, Copy/Move Constructors, Destructor
         vector() : m_data() {}
         vector(const vector<T>& vec) : m_data(vec.begin(), vec.end()) {}
-        vector(vector<T>&& vec) noexcept : m_data(std::move(vec.data)) {}
+        vector(vector<T>&& vec) noexcept : m_data(std::move(vec.m_data)) {}
         vector(const std::vector<T>& elements) : m_data(elements.begin(), elements.end()) {}
         vector(const std::initializer_list<T>& elements) : m_data(elements.begin(), elements.end()) {}
 
@@ -236,6 +252,13 @@ namespace my
             } while (index < 0);
             return m_data[index];
         }
+        inline friend std::ostream& operator<<(std::ostream& os, my::vector<T>& items)
+        {
+            for (T& item : items) {
+                os << item << std::endl;
+            }
+            return os;
+        }
 
         // Methods
         template <typename... Args>
@@ -249,6 +272,22 @@ namespace my
             m_data.pop_back();
             return result;
         }
+        template <typename U = T>
+        inline std::enable_if_t
+        <
+            std::is_same_v<U, my::string> || std::is_same_v<U, std::string>, 
+            my::string
+        >
+        join(const my::string& delim) const {
+            my::string result;
+            for (size_t i = 0; i < m_data.size(); ++i) {
+                result += m_data[i];
+                if (i < m_data.size() - 1) {
+                    result += delim;
+                }
+            }
+            return result;
+        }
         inline size_t size() const { return m_data.size(); }
         inline size_t capacity() const { return m_data.capacity(); }
         inline auto begin() -> decltype(m_data.begin()) { return m_data.begin(); }
@@ -257,6 +296,8 @@ namespace my
         inline auto end() const -> decltype(m_data.end()) { return m_data.end(); }
         inline auto cbegin() const -> decltype(m_data.cbegin()) { return m_data.cbegin(); }
         inline auto cend() const -> decltype(m_data.cend()) { return m_data.cend(); }
+        inline auto rbegin() -> decltype(m_data.rbegin()) { return m_data.rbegin(); }
+        inline auto rend() -> decltype(m_data.rend()) { return m_data.rend(); }
         inline auto rbegin() const -> decltype(m_data.rbegin()) { return m_data.rbegin(); }
         inline auto rend() const -> decltype(m_data.rend()) { return m_data.rend(); }
     };

@@ -10,4 +10,10 @@ int main()
     std::vector<int> test2 = vec;
     int res = test.pop();
     cout << res << endl;
+
+    my::string str = "this is a test";
+    my::vector<my::string> parts = str.split(" ");
+    cout << parts;
+    std::string newstr = parts.join("~");
+    cout << newstr << endl;
 }
